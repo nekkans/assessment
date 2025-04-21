@@ -21,22 +21,22 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: rdicidr-0.1.0
+        working-directory: codebase/rdicidr-0.1.0
 
       - name: Run linter
         run: npm run lint
-        working-directory: rdicidr-0.1.0
+        working-directory: codebase/rdicidr-0.1.0
 
       - name: Run formatter
         run: npm run prettier
-        working-directory: rdicidr-0.1.0
+        working-directory: codebase/rdicidr-0.1.0
 
       - name: Run tests
         env:
           CI: true  # Indented properly
         run: npm run test
-        working-directory: rdicidr-0.1.0
+        working-directory: codebase/rdicidr-0.1.0
 
       - name: Build project
         run: npm run build
-        working-directory: rdicidr-0.1.0
+        working-directory: codebase/rdicidr-0.1.0
