@@ -1,48 +1,45 @@
-name: Node.js CI
+name: CI Pipeline
 
 on:
   push:
     branches: [ "*" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "*" ]
+    paths:
+      - 'rdicidr-0.1.0/**'
 
 jobs:
-  build:
-
+  ci:
+    name: Full CI Workflow
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [15.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Install dependencies
-      run: npm install
-      working-directory: rdicidr-0.1.0
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '15' # or whatever version is in .nvmrc or package.json
 
-    - name: Run linter
-      run: npm run lint
-      working-directory: rdicidr-0.1.0
+      - name: Install dependencies
+        run: npm install
+        working-directory: rdicidr-0.1.0
 
-    - name: Run formatter
-      run: npm run prettier
-      working-directory: rdicidr-0.1.0
+      - name: Run Linter (ESLint)
+        run: npm run lint
+        working-directory: rdicidr-0.1.0
 
-    - name: Run tests
-      env: 
-        CI: true
-      run: npm run test
-      working-directory: rdicidr-0.1.0
+      - name: Run Formatter (Prettier)
+        run: npm run prettier -- --write
+        working-directory: rdicidr-0.1.0
 
-    - name: Build project
-      run: npm run build
-      working-directory: rdicidr-0.1.0
-    
+      - name: Run Tests (Jest)
+        env: 
+          CI: true
+        run: npm run test
+        working-directory: rdicidr-0.1.0
+
+      - name: Build Application
+        run: npm run build
+        working-directory: rdicidr-0.1.0
