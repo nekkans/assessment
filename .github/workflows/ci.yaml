@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: Node.js CI
 
 on:
   push:
@@ -8,16 +8,21 @@ on:
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
 
-  steps: 
-    - name: Checkout repository
-      uses: actions/checkout@v3
+    strategy:
+      matrix:
+        node-version: [15.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
       with:
-        node-version: '15'
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
 
     - name: Install dependencies
       run: npm install
@@ -40,3 +45,4 @@ jobs:
     - name: Build project
       run: npm run build
       working-directory: rdicidr-0.1.0
+    
